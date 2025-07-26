@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 
-use crate::objects::*;
+use crate::components::*;
 
 pub struct RenderPlugin;
 

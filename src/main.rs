@@ -1,14 +1,15 @@
 use bevy::{prelude::*, render::render_resource::encase::vector::FromVectorParts};
 
-use crate::{objects::*, plugins::*};
+use crate::{components::*, plugins::*, entities::*};
 
-mod objects;
 mod plugins;
+mod components;
+mod entities;
 
 // mass is solar mass
 // distance is AU
 // Velocity is AU/day
-// a second in game is a day
+// a second in game is a day * TIME_SCALER is physics
 
 fn main() {
     App::new()

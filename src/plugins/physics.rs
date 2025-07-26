@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::objects::*;
+use crate::components::*;
 
 const G: f32 = 2.9591221e-4;
 const TIME_SCALER: f32 = 100.;
