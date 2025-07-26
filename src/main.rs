@@ -13,6 +13,7 @@ mod plugins;
 
 fn main() {
     App::new()
+        .insert_resource(Time::<Fixed>::from_hz(24.))
         .add_plugins((DefaultPlugins, PhysicsPlugin, RenderPlugin))
         .add_systems(Startup, add_solar_system)
         .run();

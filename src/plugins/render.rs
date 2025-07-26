@@ -10,16 +10,30 @@ impl Plugin for RenderPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(DotTimer::default())
             .insert_resource(TtlTimer::default())
-            .add_systems(Startup, create_dot_material)
-            .add_systems(FixedUpdate, (update_mesh, create_dots, clear_ttls));
+            .add_systems(Startup, setup_render_resources)
+            .add_systems(Update, update_mesh)
+            .add_systems(FixedUpdate, (create_dots, clear_ttls));
     }
 }
 
-fn update_mesh(query: Query<(&StellarObject, &mut Transform)>) {
+fn update_mesh(
+    time: Res<Time>,
+    mut render_info: ResMut<RenderInfo>,
+    query: Query<(&StellarObject, &mut Transform)>
+) {
+    let delta_change = render_info.time_since_last_update / render_info.physics_step;
+    
     for (object, mut transform) in query {
-        transform.translation.x = object.curr_position.x;
-        transform.translation.y = object.curr_position.y;
+        transform.translation.x = object.last_position.x + object.movement.x * delta_change;
+        transform.translation.y = object.last_position.y + object.movement.y * delta_change;
     }
+    render_info.time_since_last_update += time.delta_secs();
+}
+
+#[derive(Resource)]
+pub struct RenderInfo {
+    pub physics_step: f32,
+    pub time_since_last_update: f32,
 }
 
 #[derive(Resource)]
@@ -38,9 +52,15 @@ impl Default for DotTimer {
 #[derive(Resource, Deref)]
 struct DotMaterial(Handle<ColorMaterial>);
 
-fn create_dot_material(mut commands: Commands, mut materials: ResMut<Assets<ColorMaterial>>) {
+fn setup_render_resources(
+    mut commands: Commands, 
+    mut materials: ResMut<Assets<ColorMaterial>>,
+    physics_time: Res<Time<Fixed>>,
+) {
     let dot_material = materials.add(Color::linear_rgb(1., 1., 1.));
     commands.insert_resource(DotMaterial(dot_material));
+    let physics_step = physics_time.timestep().as_secs_f32();
+    commands.insert_resource(RenderInfo {physics_step, time_since_last_update: 0.});
 }
 
 fn create_dots(

@@ -6,6 +6,7 @@ pub struct StellarObject {
     pub mass: SolarMass,
     pub last_position: Vec2,
     pub curr_position: Vec2,
+    pub movement: Vec2,
 }
 
 impl StellarObject {
@@ -15,6 +16,7 @@ impl StellarObject {
             mass,
             last_position: position,
             curr_position: position,
+            movement: Vec2::ZERO,
         }
     }
 }

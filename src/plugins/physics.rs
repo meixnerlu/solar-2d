@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::*;
+use crate::{components::*, plugins::RenderInfo};
 
 const G: f32 = 2.9591221e-4;
 const TIME_SCALER: f32 = 100.;
@@ -14,7 +14,8 @@ impl Plugin for PhysicsPlugin {
 }
 
 fn handle_orbital_physics(
-    time: Res<Time>,
+    mut render_info: ResMut<RenderInfo>,
+    time: Res<Time<Fixed>>,
     query: Query<(&mut Velocity, &mut HalfStepVelocity, &mut StellarObject)>,
 ) {
     let dt = time.delta_secs() * TIME_SCALER;
@@ -36,13 +37,16 @@ fn handle_orbital_physics(
         **half_velocities[a] = **velocities[a] + (acceleration * dt * 0.5); // KICK
         objects[a].last_position = objects[a].curr_position;
         objects[a].curr_position += **half_velocities[a] * dt; // DRIFT
+        objects[a].movement = objects[a].curr_position - objects[a].last_position;
     }
+
+    render_info.time_since_last_update = 0.;
 
     let accelerations = calculate_accelerations(&mut objects, object_count);
 
     for a in 0..object_count {
         let acceleration = accelerations[a] * (1.0 / *objects[a].mass);
-        **velocities[a] = **half_velocities[a] + (acceleration * dt * 0.5);
+        **velocities[a] = **half_velocities[a] + (acceleration * dt * 0.5); // KICK
     }
 }
 
