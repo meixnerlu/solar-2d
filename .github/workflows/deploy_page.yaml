@@ -24,6 +24,7 @@ jobs:
             target/
           key: ${{ github.ref || github.run_id }}
       - uses: dtolnay/rust-toolchain@stable
+        targets: wasm32-unknown-unknown
       - name: Install alsa and udev
         run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev
       - name: Build
