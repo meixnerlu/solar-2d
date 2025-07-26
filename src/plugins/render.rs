@@ -62,7 +62,7 @@ fn create_dots(
             }
             let dot_mesh = meshes.add(Circle::new(1.0e-2));
             let dot_transform =
-                Transform::from_xyz(object.curr_position.x, object.curr_position.y, 1.);
+                Transform::from_xyz(object.curr_position.x, object.curr_position.y, -1.);
             let material = (*dot_material).clone_weak();
             let ttl = TimeToLive::new(now);
             commands.spawn((

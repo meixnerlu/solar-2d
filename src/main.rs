@@ -1,10 +1,10 @@
 use bevy::{prelude::*, render::render_resource::encase::vector::FromVectorParts};
 
-use crate::{components::*, plugins::*, entities::*};
+use crate::{components::*, entities::*, plugins::*};
 
-mod plugins;
 mod components;
 mod entities;
+mod plugins;
 
 // mass is solar mass
 // distance is AU
@@ -18,7 +18,6 @@ fn main() {
         .run();
 }
 
-
 fn add_solar_system(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
@@ -27,7 +26,7 @@ fn add_solar_system(
     commands.spawn((
         Camera2d::default(),
         Projection::Orthographic(OrthographicProjection {
-            scale: 1. / 100.,
+            scale: 1. / 50.,
             ..OrthographicProjection::default_2d()
         }),
     ));
@@ -83,4 +82,17 @@ fn add_solar_system(
         MeshMaterial2d(jupiter_material),
     );
     commands.spawn(jupiter);
+
+    // Comet
+    let comet_mesh = meshes.add(Circle::new(0.03));
+    let comet_material = materials.add(Color::linear_rgb(200. / 255., 200. / 255., 200. / 255.));
+    let comet = StellarBundle::new(
+        "Comet",
+        SolarMass(1.0e-10),
+        Vec2::from_parts([1.392, 0.0]),
+        Velocity(Vec2::from_parts([0.0, -0.019010182])),
+        Mesh2d(comet_mesh),
+        MeshMaterial2d(comet_material),
+    );
+    commands.spawn(comet);
 }
