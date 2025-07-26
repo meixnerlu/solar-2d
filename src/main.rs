@@ -13,7 +13,7 @@ mod plugins;
 
 fn main() {
     App::new()
-        .insert_resource(Time::<Fixed>::from_hz(24.))
+        .insert_resource(Time::<Fixed>::from_hz(48.))
         .add_plugins((DefaultPlugins, PhysicsPlugin, RenderPlugin))
         .add_plugins(
             FpsOverlayPlugin {
