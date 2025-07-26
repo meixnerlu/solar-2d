@@ -1,4 +1,4 @@
-use bevy::{prelude::*, render::render_resource::encase::vector::FromVectorParts};
+use bevy::{dev_tools::fps_overlay::{FpsOverlayConfig, FpsOverlayPlugin}, prelude::*, render::render_resource::encase::vector::FromVectorParts};
 
 use crate::{components::*, entities::*, plugins::*};
 
@@ -15,6 +15,21 @@ fn main() {
     App::new()
         .insert_resource(Time::<Fixed>::from_hz(24.))
         .add_plugins((DefaultPlugins, PhysicsPlugin, RenderPlugin))
+        .add_plugins(
+            FpsOverlayPlugin {
+                config: FpsOverlayConfig {
+                    text_config: TextFont {
+                        font_size: 24.0,
+                        font: default(),
+                        font_smoothing: bevy::text::FontSmoothing::default(),
+                        ..default()
+                    },
+                    text_color: Color::srgb(0.0, 1.0, 0.0),
+                    refresh_interval: core::time::Duration::from_millis(100),
+                    enabled: true,
+                },
+            },
+        )
         .add_systems(Startup, add_solar_system)
         .run();
 }
