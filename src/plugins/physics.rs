@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{components::*, plugins::RenderInfo};
+use crate::{components::*, resources::*};
 
 const G: f32 = 2.9591221e-4;
 const TIME_SCALER: f32 = 100.;

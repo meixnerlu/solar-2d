@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use bevy::prelude::*;
 
-use crate::components::*;
+use crate::{components::*, resources::*};
 
 pub struct RenderPlugin;
 
@@ -19,10 +19,10 @@ impl Plugin for RenderPlugin {
 fn update_mesh(
     time: Res<Time>,
     mut render_info: ResMut<RenderInfo>,
-    query: Query<(&StellarObject, &mut Transform)>
+    query: Query<(&StellarObject, &mut Transform)>,
 ) {
     let delta_change = render_info.time_since_last_update / render_info.physics_step;
-    
+
     for (object, mut transform) in query {
         transform.translation.x = object.last_position.x + object.movement.x * delta_change;
         transform.translation.y = object.last_position.y + object.movement.y * delta_change;
@@ -30,37 +30,20 @@ fn update_mesh(
     render_info.time_since_last_update += time.delta_secs();
 }
 
-#[derive(Resource)]
-pub struct RenderInfo {
-    pub physics_step: f32,
-    pub time_since_last_update: f32,
-}
 
-#[derive(Resource)]
-struct DotTimer {
-    pub elapsed: Duration,
-}
-
-impl Default for DotTimer {
-    fn default() -> Self {
-        Self {
-            elapsed: Duration::ZERO,
-        }
-    }
-}
-
-#[derive(Resource, Deref)]
-struct DotMaterial(Handle<ColorMaterial>);
 
 fn setup_render_resources(
-    mut commands: Commands, 
+    mut commands: Commands,
     mut materials: ResMut<Assets<ColorMaterial>>,
     physics_time: Res<Time<Fixed>>,
 ) {
     let dot_material = materials.add(Color::linear_rgb(1., 1., 1.));
     commands.insert_resource(DotMaterial(dot_material));
     let physics_step = physics_time.timestep().as_secs_f32();
-    commands.insert_resource(RenderInfo {physics_step, time_since_last_update: 0.});
+    commands.insert_resource(RenderInfo {
+        physics_step,
+        time_since_last_update: 0.,
+    });
 }
 
 fn create_dots(
@@ -91,19 +74,6 @@ fn create_dots(
                 dot_transform,
                 ttl,
             ));
-        }
-    }
-}
-
-#[derive(Resource)]
-struct TtlTimer {
-    pub elapsed: Duration,
-}
-
-impl Default for TtlTimer {
-    fn default() -> Self {
-        Self {
-            elapsed: Duration::ZERO,
         }
     }
 }

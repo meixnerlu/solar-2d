@@ -21,5 +21,9 @@ lto = "thin"
 codegen-units = 1
 
 [dependencies]
-bevy = { version = "0.16.1", features = ["dynamic_linking", "bevy_dev_tools"] }
+bevy = { version = "0.16", features = ["dynamic_linking", "bevy_dev_tools"] }
+bevy_common_assets = { version = "0.13", features = ["yaml"] }
+
+serde = { version = "1.0", features = ["derive"]}
+
 log = { version = "*", features = ["max_level_debug", "release_max_level_warn"] }
