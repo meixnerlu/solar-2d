@@ -32,7 +32,7 @@ impl StellarBundle {
             stellar_position,
             mesh,
             material,
-            Text2d(name.into()),
+            Text2d("\n".to_string() + &name.into()),
             TextFont {
                 font_size: 10.,
                 font_smoothing: bevy::text::FontSmoothing::AntiAliased,
