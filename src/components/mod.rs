@@ -4,3 +4,5 @@ mod timetolive;
 pub use timetolive::*;
 mod velocity;
 pub use velocity::*;
+mod planet;
+pub use planet::*;

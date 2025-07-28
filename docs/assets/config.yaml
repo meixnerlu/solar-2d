@@ -1,0 +1,152 @@
+time_scaler: 100
+camera_zoom: 30
+planets:
+  - name: "Sun"
+    mass: 1
+    position:
+      x: 0
+      y: 0
+    velocity:
+      x: 0
+      y: 0
+    radius: 6
+    color:
+      red: 255
+      green: 204
+      blue: 64
+    is_planet: false
+
+  - name: "Mercury"
+    mass: 0.00000017
+    position:
+      x: 0.39
+      y: 0
+    velocity:
+      x: 0
+      y: -0.0278
+    radius: 0.6
+    color:
+      red: 169
+      green: 169
+      blue: 169
+    is_planet: true
+
+  - name: "Venus"
+    mass: 0.00000245
+    position:
+      x: 0.72
+      y: 0
+    velocity:
+      x: 0
+      y: -0.0204
+    radius: 1.35
+    color:
+      red: 245
+      green: 245
+      blue: 220
+    is_planet: true
+
+  - name: "Earth"
+    mass: 0.000003
+    position:
+      x: 1
+      y: 0
+    velocity:
+      x: 0
+      y: -0.0172
+    radius: 1.5
+    color:
+      red: 100
+      green: 149
+      blue: 237
+    is_planet: true
+
+  - name: "Mars"
+    mass: 0.00000037
+    position:
+      x: 1.52
+      y: 0
+    velocity:
+      x: 0
+      y: -0.0129
+    radius: 1.2
+    color:
+      red: 188
+      green: 39
+      blue: 50
+    is_planet: true
+
+  - name: "Jupiter"
+    mass: 0.000954
+    position:
+      x: 5.2
+      y: 0
+    velocity:
+      x: 0
+      y: -0.00754
+    radius: 2.7
+    color:
+      red: 210
+      green: 180
+      blue: 140
+    is_planet: true
+
+  - name: "Saturn"
+    mass: 0.000286
+    position:
+      x: 9.58
+      y: 0
+    velocity:
+      x: 0
+      y: -0.00559
+    radius: 2.1
+    color:
+      red: 222
+      green: 184
+      blue: 135
+    is_planet: true
+
+  - name: "Uranus"
+    mass: 0.0000436
+    position:
+      x: 19.2
+      y: 0
+    velocity:
+      x: 0
+      y: -0.00372
+    radius: 1.95
+    color:
+      red: 173
+      green: 216
+      blue: 230
+    is_planet: true
+
+  - name: "Neptune"
+    mass: 0.0000515
+    position:
+      x: 30.05
+      y: 0
+    velocity:
+      x: 0
+      y: -0.00310
+    radius: 1.950
+    color:
+      red: 72
+      green: 61
+      blue: 139
+    is_planet: true
+
+  - name: "Comet"
+    mass: 0.0000000001
+    position:
+      x: 1.392
+      y: 0
+    velocity:
+      x: 0
+      y: -0.019010182
+    radius: 0.9
+    color:
+      red: 200
+      green: 200
+      blue: 200
+    is_planet: true

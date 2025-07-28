@@ -3,7 +3,6 @@ use bevy::prelude::*;
 use crate::{components::*, resources::*};
 
 const G: f32 = 2.9591221e-4;
-const TIME_SCALER: f32 = 100.;
 
 pub struct PhysicsPlugin;
 
@@ -16,9 +15,10 @@ impl Plugin for PhysicsPlugin {
 fn handle_orbital_physics(
     mut render_info: ResMut<RenderInfo>,
     time: Res<Time<Fixed>>,
+    time_scaler: Res<TimeScaler>,
     query: Query<(&mut Velocity, &mut HalfStepVelocity, &mut StellarObject)>,
 ) {
-    let dt = time.delta_secs() * TIME_SCALER;
+    let dt = time.delta_secs() * **time_scaler;
     let mut velocities = vec![];
     let mut half_velocities = vec![];
     let mut objects: Vec<Mut<'_, StellarObject>> = vec![];

@@ -22,6 +22,9 @@ impl Default for DotTimer {
 }
 
 #[derive(Resource, Deref)]
+pub struct DotMesh(pub Handle<Mesh>);
+
+#[derive(Resource, Deref)]
 pub struct DotMaterial(pub Handle<ColorMaterial>);
 
 

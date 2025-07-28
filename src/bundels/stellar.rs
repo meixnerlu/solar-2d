@@ -10,6 +10,8 @@ pub struct StellarBundle(
     pub Transform,
     pub Mesh2d,
     pub MeshMaterial2d<ColorMaterial>,
+    pub Text2d,
+    pub TextFont,
 );
 
 impl StellarBundle {
@@ -21,8 +23,8 @@ impl StellarBundle {
         mesh: Mesh2d,
         material: MeshMaterial2d<ColorMaterial>,
     ) -> Self {
-        let stellar_object = StellarObject::new(name.into(), mass, position);
-        let stellar_position = Transform::from_xyz(position.x, position.y, 0.);
+        let stellar_object = StellarObject::new(mass, position);
+        let stellar_position = Transform::from_xyz(position.x, position.y, 0.).with_scale(Vec3::splat(1. / 30.));
         Self(
             stellar_object,
             velocity,
@@ -30,6 +32,12 @@ impl StellarBundle {
             stellar_position,
             mesh,
             material,
+            Text2d(name.into()),
+            TextFont {
+                font_size: 10.,
+                font_smoothing: bevy::text::FontSmoothing::AntiAliased,
+                ..Default::default()
+            }
         )
     }
 }

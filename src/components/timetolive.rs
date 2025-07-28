@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-const TTL: f32 = 120.;
+const TTL: f32 = 60.;
 
 #[derive(Debug, Component)]
 pub struct TimeToLive {

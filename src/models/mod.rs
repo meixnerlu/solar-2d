@@ -1,2 +1,2 @@
-mod planet_config;
-pub use planet_config::*;
+mod config;
+pub use config::*;

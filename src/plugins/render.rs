@@ -30,13 +30,14 @@ fn update_mesh(
     render_info.time_since_last_update += time.delta_secs();
 }
 
-
-
 fn setup_render_resources(
     mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
     physics_time: Res<Time<Fixed>>,
 ) {
+    let dot_mesh = meshes.add(Circle::new(1.0e-2));
+    commands.insert_resource(DotMesh(dot_mesh));
     let dot_material = materials.add(Color::linear_rgb(1., 1., 1.));
     commands.insert_resource(DotMaterial(dot_material));
     let physics_step = physics_time.timestep().as_secs_f32();
@@ -50,9 +51,9 @@ fn create_dots(
     mut timer: ResMut<DotTimer>,
     time: Res<Time<Fixed>>,
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
+    dot_mesh: Res<DotMesh>,
     dot_material: Res<DotMaterial>,
-    query: Query<&StellarObject>,
+    query: Query<&StellarObject, With<PlanetFlag>>,
 ) {
     let now = time.elapsed_secs();
     timer.elapsed += time.delta();
@@ -60,10 +61,7 @@ fn create_dots(
     if timer.elapsed >= Duration::from_millis(200) {
         timer.elapsed -= Duration::from_millis(200);
         for object in query {
-            if object.name == "Sun" {
-                continue;
-            }
-            let dot_mesh = meshes.add(Circle::new(1.0e-2));
+            let dot_mesh = (*dot_mesh).clone_weak();
             let dot_transform =
                 Transform::from_xyz(object.curr_position.x, object.curr_position.y, -1.);
             let material = (*dot_material).clone_weak();

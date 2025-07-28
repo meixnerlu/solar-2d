@@ -33,7 +33,7 @@ fn main() {
             }),
             PhysicsPlugin,
             RenderPlugin,
-            YamlAssetPlugin::<PlanetsConfig>::new(&["config/planets.yaml"]),
+            YamlAssetPlugin::<Config>::new(&["config.yaml"]),
         ))
         .init_state::<AppState>()
         .add_plugins(FpsOverlayPlugin {
@@ -49,34 +49,36 @@ fn main() {
                 enabled: true,
             },
         })
-        .add_systems(Startup, (setup, add_solar_system).chain())
-        .add_systems(Update, add_solar_system.run_if(in_state(AppState::Loading)))
+        .add_systems(Startup, load_config)
+        .add_systems(Update, setup.run_if(in_state(AppState::Loading)))
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let planets: Handle<PlanetsConfig> = asset_server.load("config/planets.yaml");
-    commands.insert_resource(PlanetConfigHandle(planets));
+fn load_config(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let config: Handle<Config> = asset_server.load("config.yaml");
+    commands.insert_resource(ConfigHandle(config));
 }
 
-fn add_solar_system(
+fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
-    planet_handle: Res<PlanetConfigHandle>,
-    planets: Res<Assets<PlanetsConfig>>,
+    config_handle: Res<ConfigHandle>,
+    config: Res<Assets<Config>>,
     mut state: ResMut<NextState<AppState>>,
 ) {
-    if let Some(planets) = planets.get(planet_handle.0.id()) {
+    if let Some(config) = config.get(config_handle.0.id()) {
+        commands.insert_resource(TimeScaler(config.time_scaler));
+
         commands.spawn((
             Camera2d::default(),
             Projection::Orthographic(OrthographicProjection {
-                scale: 1. / 50.,
+                scale: 1. / config.camera_zoom,
                 ..OrthographicProjection::default_2d()
             }),
         ));
 
-        for planet in &planets.planets {
+        for planet in &config.planets {
             let planet_mesh = meshes.add(Circle::new(planet.radius));
             let planet_material = materials.add(Color::linear_rgb(
                 planet.color.red / 255.,
@@ -85,7 +87,7 @@ fn add_solar_system(
             ));
             let planet_position = Vec2::from_slice(&[planet.position.x, planet.position.y]);
             let planet_velocity = Vec2::from_slice(&[planet.velocity.x, planet.velocity.y]);
-            let planet = StellarBundle::new(
+            let planet_bundle = StellarBundle::new(
                 &planet.name,
                 SolarMass(planet.mass),
                 planet_position,
@@ -93,76 +95,12 @@ fn add_solar_system(
                 Mesh2d(planet_mesh),
                 MeshMaterial2d(planet_material),
             );
-            commands.spawn(planet);
+            let mut entity = commands.spawn(planet_bundle);
+            if planet.is_planet {
+                entity.insert(PlanetFlag);
+            }
         }
 
         state.set(AppState::Ready);
     }
-
-    /*
-    // Sun
-    let solar_mesh = meshes.add(Circle::new(0.2));
-    let solar_material = materials.add(Color::linear_rgb(255. / 255., 204. / 255., 64. / 255.));
-    let sun = StellarBundle::new(
-        "Sun",
-        SolarMass(1.),
-        Vec2::from_parts([0., 0.]),
-        Velocity(Vec2::from_parts([0., 0.])),
-        Mesh2d(solar_mesh),
-        MeshMaterial2d(solar_material),
-    );
-    commands.spawn(sun);
-
-    // Earth
-    let earth_mesh = meshes.add(Circle::new(0.05));
-    let earth_material = materials.add(Color::linear_rgb(100. / 255., 149. / 255., 237. / 255.));
-    let earth = StellarBundle::new(
-        "Earth",
-        SolarMass(3.0e-6),
-        Vec2::from_parts([1., 0.]),
-        Velocity(Vec2::from_parts([0., -1.72e-2])),
-        Mesh2d(earth_mesh),
-        MeshMaterial2d(earth_material),
-    );
-    commands.spawn(earth);
-
-    // Mars
-    let mars_mesh = meshes.add(Circle::new(0.04));
-    let mars_material = materials.add(Color::linear_rgb(188. / 255., 39. / 255., 50. / 255.));
-    let mars = StellarBundle::new(
-        "Mars",
-        SolarMass(3.2e-7),
-        Vec2::from_parts([1.52, 0.]),
-        Velocity(Vec2::from_parts([0., -1.29e-2])),
-        Mesh2d(mars_mesh),
-        MeshMaterial2d(mars_material),
-    );
-    commands.spawn(mars);
-
-    // Jupiter
-    let jupiter_mesh = meshes.add(Circle::new(0.09));
-    let jupiter_material = materials.add(Color::linear_rgb(210. / 255., 180. / 255., 140. / 255.));
-    let jupiter = StellarBundle::new(
-        "Jupiter",
-        SolarMass(9.54e-4),
-        Vec2::from_parts([5.2, 0.]),
-        Velocity(Vec2::from_parts([0., -0.00754])),
-        Mesh2d(jupiter_mesh),
-        MeshMaterial2d(jupiter_material),
-    );
-    commands.spawn(jupiter);
-
-    // Comet
-    let comet_mesh = meshes.add(Circle::new(0.03));
-    let comet_material = materials.add(Color::linear_rgb(200. / 255., 200. / 255., 200. / 255.));
-    let comet = StellarBundle::new(
-        "Comet",
-        SolarMass(1.0e-10),
-        Vec2::from_parts([1.392, 0.0]),
-        Velocity(Vec2::from_parts([0.0, -0.019010182])),
-        Mesh2d(comet_mesh),
-        MeshMaterial2d(comet_material),
-    );
-    commands.spawn(comet);
-    */
 }
