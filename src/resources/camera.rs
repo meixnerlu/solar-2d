@@ -13,7 +13,7 @@ impl Plugin for CameraControllPlugin {
 fn handle_camera_controll(
     time: Res<Time>,
     key_input: Res<ButtonInput<KeyCode>>,
-    mut query: Query<(&mut Transform, &mut Projection, &CameraController), With<Camera2d>>
+    mut query: Query<(&mut Transform, &mut Projection, &CameraController), With<Camera2d>>,
 ) {
     let dt = time.delta_secs();
 
@@ -57,7 +57,6 @@ fn handle_camera_controll(
     let new_zoom = (1. / ortho.scale) + (movement.z * dt * controller.zoom_speed);
     match new_zoom < 0. {
         true => ortho.scale = 1. / 0.01,
-        false => ortho.scale = 1. / new_zoom
+        false => ortho.scale = 1. / new_zoom,
     }
-    
 }

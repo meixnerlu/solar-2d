@@ -27,7 +27,6 @@ pub struct DotMesh(pub Handle<Mesh>);
 #[derive(Resource, Deref)]
 pub struct DotMaterial(pub Handle<ColorMaterial>);
 
-
 #[derive(Resource)]
 pub struct TtlTimer {
     pub elapsed: Duration,

@@ -24,7 +24,8 @@ impl StellarBundle {
         material: MeshMaterial2d<ColorMaterial>,
     ) -> Self {
         let stellar_object = StellarObject::new(mass, position);
-        let stellar_position = Transform::from_xyz(position.x, position.y, 0.).with_scale(Vec3::splat(1. / 30.));
+        let stellar_position =
+            Transform::from_xyz(position.x, position.y, 0.).with_scale(Vec3::splat(1. / 30.));
         Self(
             stellar_object,
             velocity,
@@ -37,7 +38,7 @@ impl StellarBundle {
                 font_size: 10.,
                 font_smoothing: bevy::text::FontSmoothing::AntiAliased,
                 ..Default::default()
-            }
+            },
         )
     }
 }

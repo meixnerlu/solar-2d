@@ -1,12 +1,14 @@
 use bevy::{
-    asset::AssetMetaCheck, dev_tools::fps_overlay::{FpsOverlayConfig, FpsOverlayPlugin}, prelude::*
+    asset::AssetMetaCheck,
+    dev_tools::fps_overlay::{FpsOverlayConfig, FpsOverlayPlugin},
+    prelude::*,
 };
 use bevy_common_assets::yaml::YamlAssetPlugin;
 
-use crate::{components::*, bundels::*, models::*, plugins::*, resources::*};
+use crate::{bundels::*, components::*, models::*, plugins::*, resources::*};
 
-mod components;
 mod bundels;
+mod components;
 mod models;
 mod plugins;
 mod resources;
@@ -27,10 +29,18 @@ fn main() {
     App::new()
         .insert_resource(Time::<Fixed>::from_hz(48.))
         .add_plugins((
-            DefaultPlugins.set(AssetPlugin {
-                meta_check: AssetMetaCheck::Never,
-                ..default()
-            }),
+            DefaultPlugins
+                .set(AssetPlugin {
+                    meta_check: AssetMetaCheck::Never,
+                    ..default()
+                })
+                .set(WindowPlugin {
+                    primary_window: Some(Window {
+                        fit_canvas_to_parent: true,
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                }),
             PhysicsPlugin,
             RenderPlugin,
             CameraControllPlugin,
@@ -82,10 +92,12 @@ fn setup(
         ));
 
         commands.spawn((
-            Text::new(r#"Use WASD to move
+            Text::new(
+                r#"Use WASD to move
                 R and F to zoom
                 Space to center
-            "#),
+            "#,
+            ),
             TextFont {
                 font_size: 24.0,
                 ..default()
