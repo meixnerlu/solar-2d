@@ -6,3 +6,5 @@ mod velocity;
 pub use velocity::*;
 mod planet;
 pub use planet::*;
+mod camera;
+pub use camera::*;

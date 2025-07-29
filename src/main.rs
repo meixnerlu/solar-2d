@@ -33,6 +33,7 @@ fn main() {
             }),
             PhysicsPlugin,
             RenderPlugin,
+            CameraControllPlugin,
             YamlAssetPlugin::<Config>::new(&["config.yaml"]),
         ))
         .init_state::<AppState>()
@@ -72,10 +73,30 @@ fn setup(
 
         commands.spawn((
             Camera2d::default(),
+            CameraController::default(),
+            Transform::default(),
             Projection::Orthographic(OrthographicProjection {
                 scale: 1. / config.camera_zoom,
                 ..OrthographicProjection::default_2d()
             }),
+        ));
+
+        commands.spawn((
+            Text::new(r#"Use WASD to move
+                R and F to zoom
+                Space to center
+            "#),
+            TextFont {
+                font_size: 24.0,
+                ..default()
+            },
+            TextLayout::new_with_justify(JustifyText::Right),
+            Node {
+                position_type: PositionType::Absolute,
+                top: Val::Px(10.0),
+                right: Val::Px(10.0),
+                ..default()
+            },
         ));
 
         for planet in &config.planets {
